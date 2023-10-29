@@ -30,6 +30,7 @@ var __awaiter =
       step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   };
+// fetch
 class FetchRequest {
   constructor(url) {
     this.url = url;
@@ -127,5 +128,118 @@ const request = new FetchRequest('http://37.220.80.108');
 // request.getId('6');
 // request.post('Victoria', 'doctor', false);
 // request.patchId('7', 'Oleg', 'doctor', false, true);
-// request.deleteId('43');
+// request.deleteId('8');
+
+// XMLHttpRequest
+class XmlRequest {
+  constructor(url) {
+    this.url = url;
+  }
+  getAll(isImportant, name_like, isCompleted) {
+    return __awaiter(this, void 0, void 0, function* () {
+      return new Promise((res, rej) => {
+        let query = '?';
+        if (isImportant !== null && isImportant !== undefined) {
+          query += `isImportant=${isImportant}&`;
+        }
+        if (name_like !== null && name_like !== undefined) {
+          query += `name_like=${name_like}&`;
+        }
+        if (isCompleted !== null && isCompleted !== undefined) {
+          query += `isCompleted=${isCompleted}&`;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `${this.url}/tasks/${query}`);
+        xhr.responseType = 'json';
+        xhr.onload = () => res(xhr.response);
+        xhr.onerror = () => rej(xhr.status);
+        xhr.send();
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+    });
+  }
+  getId(taskId) {
+    return __awaiter(this, void 0, void 0, function* () {
+      return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `${this.url}/tasks/${taskId}`);
+        xhr.responseType = 'json';
+        xhr.onload = () => res(xhr.response);
+        xhr.onerror = () => rej(xhr.status);
+        xhr.send();
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+    });
+  }
+  post(name = 'Anonim', info = 'unknown', isImportant = false) {
+    return __awaiter(this, void 0, void 0, function* () {
+      return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${this.url}/tasks`);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'json';
+        xhr.onload = () => res(xhr.response);
+        xhr.onerror = () => rej(xhr.status);
+        xhr.send(
+          JSON.stringify({
+            name: `${name}`,
+            info: `${info}`,
+            isImportant: isImportant,
+          })
+        );
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+    });
+  }
+  patchId(taskId, name, info, isImportant, isCompleted = false) {
+    return __awaiter(this, void 0, void 0, function* () {
+      return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('PATCH', `${this.url}/tasks/${taskId}`);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'json';
+        xhr.onload = () => res(xhr.response);
+        xhr.onerror = () => rej(xhr.status);
+        xhr.send(
+          JSON.stringify({
+            name: `${name}`,
+            info: `${info}`,
+            isImportant: isImportant,
+            isCompleted: isCompleted,
+          })
+        );
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+    });
+  }
+  deleteId(taskId) {
+    return __awaiter(this, void 0, void 0, function* () {
+      return new Promise((res, rej) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', `${this.url}/tasks/${taskId}`);
+        xhr.responseType = 'json';
+        xhr.onerror = () => rej(xhr.status);
+        xhr.onload = () => res(xhr.status);
+        xhr.send();
+      })
+        .then((res) => {
+          if (res == 200) {
+            console.log('Пользователь удален');
+            return;
+          }
+        })
+        .catch((err) => console.error(err));
+    });
+  }
+}
+const request2 = new XmlRequest('http://37.220.80.108');
+// request2.getAll();
+// request2.getId('6');
+// request2.post('Victoria', 'doctor', false);
+// request2.patchId('7', 'Oleg', 'doctor', false, true);
+// request2.deleteId('8');
 //# sourceMappingURL=index.js.map
